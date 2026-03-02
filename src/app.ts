@@ -11,7 +11,7 @@ export const app = express();
 app.use(express.json());
 app.use(cors({ origin: true }));
 
-app.post('/', async (req: Request, res: Response) => {
+const convertHandler = async (req: Request, res: Response) => {
   try {
     logger.info('Received request:', {
       body: req.body,
@@ -107,7 +107,10 @@ app.post('/', async (req: Request, res: Response) => {
       details: error.message,
     } as ErrorResponse);
   }
-});
+};
+
+app.post('/', convertHandler);
+app.post('/convert', convertHandler);
 
 app.post('/test', async (req: Request, res: Response) => {
   try {

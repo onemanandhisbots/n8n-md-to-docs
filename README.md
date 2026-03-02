@@ -1,6 +1,6 @@
 # Markdown to Google Docs Converter for n8n
 
-A Firebase function that converts Markdown content to Google Docs format, specifically designed for n8n workflows. It seamlessly integrates with n8n's Google OAuth credentials and is perfect for converting LLM outputs into properly formatted Google Docs.
+A Railway-ready Node.js service that converts Markdown content to Google Docs format, specifically designed for n8n workflows. It seamlessly integrates with n8n's Google OAuth credentials and is perfect for converting LLM outputs into properly formatted Google Docs.
 
 ## Overview
 
@@ -49,7 +49,7 @@ Watch how the converter works in this demonstration:
 
 ## Features
 
-- Serverless architecture using Firebase Functions
+- Deployable on Railway as a standard Node.js web service
 - OAuth2 authentication for Google Docs API
 - Clean and consistent document formatting
 - Maintains document hierarchy and styling
@@ -63,11 +63,43 @@ Watch how the converter works in this demonstration:
 ```bash
 bun install
 ```
-3. Set up Firebase:
+3. Run locally:
 ```bash
-firebase login
-firebase init functions
+bun run build
+node lib/server.js
 ```
+4. Deploy to Railway:
+   - Create a new Railway project and connect this repository
+   - Set build command to `bun run build`
+   - Set start command to `bun run start`
+   - Ensure `NODE_ENV=production` is configured
+
+### Deploy without linking a GitHub repo (Railway CLI)
+
+If GitHub connection approvals are blocked, the easiest path is Railway CLI deploy from your local machine:
+
+```bash
+npm i -g @railway/cli
+railway login
+railway init
+railway up
+```
+
+Then set environment variables in Railway:
+
+```bash
+railway variables set NODE_ENV=production
+```
+
+You can also set variables from the Railway dashboard if CLI variable permissions are restricted.
+
+When you push updates later, redeploy with:
+
+```bash
+railway up
+```
+
+This repo already contains `railway.json` with build/start commands, so `railway up` will use those defaults.
 
 ## Usage in n8n
 
@@ -119,3 +151,39 @@ This project is maintained by [Aemal Sayer](https://aemalsayer.com), a freelance
 ## License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+
+## Troubleshooting
+
+### `bun install` / `npm install` returns `403 Forbidden`
+
+This is usually an environment networking or registry configuration issue (proxy, private registry, or missing token), not a project code issue.
+
+1. Confirm the active registry:
+```bash
+npm config get registry
+bun pm registry
+```
+Expected: `https://registry.npmjs.org/`
+
+2. If a corporate proxy is set incorrectly, clear proxy settings and retry:
+```bash
+unset HTTP_PROXY HTTPS_PROXY http_proxy https_proxy npm_config_http_proxy npm_config_https_proxy
+npm config delete proxy
+npm config delete https-proxy
+bun install
+```
+
+3. If your org uses a private npm mirror, authenticate first:
+```bash
+npm login --registry <your-registry-url>
+```
+(or configure `NPM_TOKEN` in CI/Railway if required).
+
+4. Re-run install and build:
+```bash
+bun install
+bun run build
+```
+
+If the install still fails in CI, run the same two checks (`npm config get registry` and `env | grep -i proxy`) in the pipeline logs to verify registry/proxy settings.

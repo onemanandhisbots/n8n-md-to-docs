@@ -1,6 +1,6 @@
 import { Document, Paragraph, TextRun, HeadingLevel, Packer, AlignmentType, Table, TableRow, TableCell, BorderStyle } from 'docx';
 import { marked } from 'marked';
-import { logger } from 'firebase-functions/v2';
+import { logger } from '../logger';
 import type { Token, Tokens } from 'marked';
 
 const headingLevelMap = {

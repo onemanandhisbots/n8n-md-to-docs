@@ -109,7 +109,6 @@ const convertHandler = async (req: Request, res: Response) => {
   }
 };
 
-app.post('/', convertHandler);
 app.post('/convert', convertHandler);
 
 app.post('/test', async (req: Request, res: Response) => {

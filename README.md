@@ -24,7 +24,7 @@ The service handles various Markdown elements including:
 ## Quick Start
 
 ### Hosted Service
-The service is freely available at: `https://md2doc.n8n.aemalsayer.com`
+The service is freely available at: `https://md2doc.n8n.aemalsayer.com/convert`
 
 Send a POST request with:
 ```json
@@ -110,7 +110,7 @@ Add an HTTP Request node and configure it as follows:
 ![HTTP Request Node Configuration](.github/assets/screen1.png)
 
 1. Method: `POST`
-2. URL: `https://md2doc.n8n.aemalsayer.com`
+2. URL: `https://md2doc.n8n.aemalsayer.com/convert`
 3. Authentication: 
    - Predefined Credential Type
    - Credential Type: `Google Docs OAuth2 API`
